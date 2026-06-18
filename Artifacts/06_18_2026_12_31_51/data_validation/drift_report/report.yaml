@@ -1,0 +1,93 @@
+Abnormal_URL:
+  drift_status: false
+  p_value: 1.0
+DNSRecord:
+  drift_status: false
+  p_value: 0.8922329684446557
+Domain_registeration_length:
+  drift_status: false
+  p_value: 0.5944636111758286
+Favicon:
+  drift_status: false
+  p_value: 0.6906258784339521
+Google_Index:
+  drift_status: false
+  p_value: 0.888188931899033
+HTTPS_token:
+  drift_status: false
+  p_value: 1.0
+Iframe:
+  drift_status: false
+  p_value: 1.0
+Links_in_tags:
+  drift_status: false
+  p_value: 0.696262907175445
+Links_pointing_to_page:
+  drift_status: false
+  p_value: 0.888188931899031
+Page_Rank:
+  drift_status: false
+  p_value: 1.0
+Prefix_Suffix:
+  drift_status: false
+  p_value: 0.9981098952009998
+Redirect:
+  drift_status: false
+  p_value: 0.9999671272734229
+Request_URL:
+  drift_status: false
+  p_value: 0.7786981711104324
+Result:
+  drift_status: false
+  p_value: 0.9999999999999728
+RightClick:
+  drift_status: false
+  p_value: 1.0
+SFH:
+  drift_status: false
+  p_value: 0.9998388206083408
+SSLfinal_State:
+  drift_status: false
+  p_value: 0.9567950838314786
+Shortining_Service:
+  drift_status: false
+  p_value: 0.9999999999999994
+Statistical_report:
+  drift_status: false
+  p_value: 1.0
+Submitting_to_email:
+  drift_status: false
+  p_value: 0.903929532220132
+URL_Length:
+  drift_status: false
+  p_value: 1.0
+URL_of_Anchor:
+  drift_status: false
+  p_value: 0.9491923880973568
+age_of_domain:
+  drift_status: false
+  p_value: 0.839356235153043
+double_slash_redirecting:
+  drift_status: false
+  p_value: 1.0
+having_At_Symbol:
+  drift_status: false
+  p_value: 0.9995865036983179
+having_IP_Address:
+  drift_status: false
+  p_value: 0.47011983283925707
+having_Sub_Domain:
+  drift_status: false
+  p_value: 0.9999462839353719
+on_mouseover:
+  drift_status: false
+  p_value: 0.9999462839353719
+popUpWidnow:
+  drift_status: false
+  p_value: 0.75724107551835
+port:
+  drift_status: false
+  p_value: 0.9999996593475295
+web_traffic:
+  drift_status: false
+  p_value: 0.9518099343765413

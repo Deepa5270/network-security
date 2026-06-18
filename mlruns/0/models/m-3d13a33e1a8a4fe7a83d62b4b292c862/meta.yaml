@@ -1,0 +1,11 @@
+artifact_location: file:C:/Users/BIT/Desktop/Deepa/Data analyst bootcamp/Projects/Project
+  3-cybersecurity/security/mlruns/0/models/m-3d13a33e1a8a4fe7a83d62b4b292c862/artifacts
+creation_timestamp: 1781778767384
+experiment_id: '0'
+last_updated_timestamp: 1781778786147
+model_id: m-3d13a33e1a8a4fe7a83d62b4b292c862
+model_type: null
+name: model
+source_run_id: 158f7555d54f42cdb41937632bac9010
+status: 2
+status_message: null
