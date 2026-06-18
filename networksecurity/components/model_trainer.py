@@ -26,10 +26,9 @@ from sklearn.ensemble import (
 import mlflow
 from urllib.parse import urlparse
 
-os.environ.pop("MLFLOW_TRACKING_URI", None)
-os.environ.pop("MLFLOW_TRACKING_USERNAME", None)
-os.environ.pop("MLFLOW_TRACKING_PASSWORD", None)
-
+os.environ["MLFLOW_TRACKING_URI"] = "https://dagshub.com/deepa7932praj/network-security.mlflow"
+os.environ["MLFLOW_TRACKING_USERNAME"] = "deepa7932praj"
+os.environ["MLFLOW_TRACKING_PASSWORD"] = "05e1fc5683e380018cd41727d2f4929fd1419acb"
 
 
 
@@ -42,8 +41,7 @@ class ModelTrainer:
             raise NetworkSecurityException(e,sys)
         
     def track_mlflow(self,best_model,classificationmetric):
-        ### mlflow.set_registry_uri("https://dagshub.com/krishnaik06/networksecurity.mlflow")
-        mlflow.set_tracking_uri("sqlite:///mlflow.db")
+        mlflow.set_tracking_uri("https://dagshub.com/deepa7932praj/network-security.mlflow")
         tracking_url_type_store = urlparse(mlflow.get_tracking_uri()).scheme
         with mlflow.start_run():
             f1_score=classificationmetric.f1_score
