@@ -1,21 +1,519 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Data Table</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Security — Prediction Dashboard</title>
     <style>
-        table {
-            border-collapse: collapse;
-            width: 100%;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #f0f2f5;
+            color: #1a1a2e;
+            min-height: 100vh;
+            padding: 2rem;
         }
-        th, td {
-            border: 1px solid black;
-            padding: 8px;
+
+        .page-header {
+            max-width: 1200px;
+            margin: 0 auto 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            background: #1a1a2e;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .brand-icon svg {
+            width: 22px;
+            height: 22px;
+            fill: none;
+            stroke: #fff;
+            stroke-width: 1.8;
+        }
+
+        .brand-text h1 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a2e;
+            letter-spacing: -0.2px;
+        }
+
+        .brand-text p {
+            font-size: 12px;
+            color: #888;
+            margin-top: 1px;
+        }
+
+        .timestamp {
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        .stats-grid {
+            max-width: 1200px;
+            margin: 0 auto 1.5rem;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+
+        .stat-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 1.2rem 1.4rem;
+            border: 1px solid #eaeaea;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            font-weight: 500;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 6px;
+        }
+
+        .stat-value {
+            font-size: 26px;
+            font-weight: 600;
+            color: #1a1a2e;
+            line-height: 1;
+        }
+
+        .stat-sub {
+            font-size: 11px;
+            color: #aaa;
+            margin-top: 4px;
+        }
+
+        .stat-card.danger .stat-value { color: #c0392b; }
+        .stat-card.success .stat-value { color: #27ae60; }
+        .stat-card.warn .stat-value { color: #e67e22; }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 14px;
+            border: 1px solid #eaeaea;
+            overflow: hidden;
+        }
+
+        .toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.2rem 1.5rem;
+            border-bottom: 1px solid #f0f0f0;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .toolbar-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toolbar-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+
+        .row-badge {
+            background: #f0f2f5;
+            color: #666;
+            font-size: 11px;
+            font-weight: 500;
+            padding: 3px 9px;
+            border-radius: 20px;
+        }
+
+        .toolbar-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-wrap {
+            position: relative;
+        }
+
+        .search-wrap svg {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 14px;
+            height: 14px;
+            stroke: #aaa;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        input[type=text] {
+            padding: 7px 12px 7px 32px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 13px;
+            outline: none;
+            width: 220px;
+            color: #333;
+            background: #fafafa;
+        }
+
+        input[type=text]:focus {
+            border-color: #1a1a2e;
+            background: #fff;
+        }
+
+        select {
+            padding: 7px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 13px;
+            outline: none;
+            color: #333;
+            background: #fafafa;
+            cursor: pointer;
+        }
+
+        select:focus { border-color: #1a1a2e; }
+
+        .export-btn {
+            padding: 7px 14px;
+            background: #1a1a2e;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .export-btn svg {
+            width: 14px;
+            height: 14px;
+            stroke: #fff;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .export-btn:hover { background: #2d2d4e; }
+
+        .table-wrap { overflow-x: auto; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        thead tr { background: #fafafa; }
+
+        thead th {
+            padding: 10px 16px;
             text-align: left;
+            font-weight: 500;
+            color: #888;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid #f0f0f0;
+            white-space: nowrap;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        thead th:hover { color: #333; }
+
+        tbody tr {
+            border-bottom: 1px solid #f7f7f7;
+            transition: background 0.1s;
+        }
+
+        tbody tr:last-child { border-bottom: none; }
+        tbody tr:hover { background: #f9fafc; }
+
+        tbody td {
+            padding: 11px 16px;
+            color: #333;
+            vertical-align: middle;
+        }
+
+        .pill {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .pill-normal { background: #e8f5e9; color: #2e7d32; }
+        .pill-attack { background: #fdecea; color: #c62828; }
+        .pill-scan   { background: #fff8e1; color: #f57f17; }
+        .pill-exfil  { background: #fce4ec; color: #ad1457; }
+        .pill-tcp    { background: #e3f2fd; color: #1565c0; }
+        .pill-udp    { background: #f3e5f5; color: #6a1b9a; }
+        .pill-icmp   { background: #e0f2f1; color: #00695c; }
+
+        .conf-bar-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .conf-bar {
+            flex: 1;
+            height: 5px;
+            background: #f0f0f0;
+            border-radius: 99px;
+            overflow: hidden;
+            min-width: 60px;
+        }
+
+        .conf-fill {
+            height: 100%;
+            border-radius: 99px;
+            background: #1a1a2e;
+        }
+
+        .conf-fill.low  { background: #e74c3c; }
+        .conf-fill.mid  { background: #f39c12; }
+        .conf-fill.high { background: #27ae60; }
+
+        .conf-text {
+            font-size: 12px;
+            font-weight: 500;
+            color: #555;
+            min-width: 36px;
+            text-align: right;
+        }
+
+        .mono { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px; }
+
+        .footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px;
+            background: #fafafa;
+            border-top: 1px solid #f0f0f0;
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: #bbb;
+            font-size: 13px;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .page-header { flex-direction: column; align-items: flex-start; gap: 8px; }
         }
     </style>
 </head>
 <body>
-    <h2>Predicted Data</h2>
-    {{ table | safe }}
+
+<div class="page-header">
+    <div class="brand">
+        <div class="brand-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z"/></svg>
+        </div>
+        <div class="brand-text">
+            <h1>Network Security System</h1>
+            <p>ML-powered intrusion detection</p>
+        </div>
+    </div>
+    <span class="timestamp" id="ts"></span>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card success">
+        <div class="stat-label">Total Predictions</div>
+        <div class="stat-value" id="s-total">—</div>
+        <div class="stat-sub">from current batch</div>
+    </div>
+    <div class="stat-card success">
+        <div class="stat-label">Normal Traffic</div>
+        <div class="stat-value" id="s-normal">—</div>
+        <div class="stat-sub">no threat detected</div>
+    </div>
+    <div class="stat-card danger">
+        <div class="stat-label">Threats Detected</div>
+        <div class="stat-value" id="s-threat">—</div>
+        <div class="stat-sub">requires attention</div>
+    </div>
+    <div class="stat-card warn">
+        <div class="stat-label">Avg Confidence</div>
+        <div class="stat-value" id="s-conf">—</div>
+        <div class="stat-sub">model certainty</div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="toolbar">
+        <div class="toolbar-left">
+            <span class="toolbar-title">Prediction Results</span>
+            <span class="row-badge" id="row-badge">0 rows</span>
+        </div>
+        <div class="toolbar-right">
+            <div class="search-wrap">
+                <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                <input type="text" id="search" placeholder="Search predictions…" oninput="filterTable()">
+            </div>
+            <select id="filter-pred" onchange="filterTable()">
+                <option value="">All predictions</option>
+                <option value="Normal">Normal</option>
+                <option value="Attack">Attack</option>
+                <option value="Scan">Scan</option>
+            </select>
+            <button class="export-btn" onclick="exportCSV()">
+                <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Export CSV
+            </button>
+        </div>
+    </div>
+
+    <div class="table-wrap">
+        {{ table | safe }}
+    </div>
+
+    <div class="footer">
+        <span id="footer-info">Showing all rows</span>
+        <span>NetworkSecurity ML · Gradient Boosting Classifier</span>
+    </div>
+</div>
+
+<script>
+    document.getElementById("ts").textContent = new Date().toLocaleString('en-IN', {dateStyle:'medium', timeStyle:'short'});
+
+    function getPillClass(val) {
+        val = (val || "").toLowerCase();
+        if (val.includes("normal")) return "pill-normal";
+        if (val.includes("attack") || val.includes("brute") || val.includes("ddos")) return "pill-attack";
+        if (val.includes("scan")) return "pill-scan";
+        if (val.includes("exfil")) return "pill-exfil";
+        return "pill-normal";
+    }
+
+    function styleTable() {
+        const table = document.querySelector("table");
+        if (!table) return;
+        table.querySelectorAll("thead th").forEach(th => {
+            const t = th.innerText.trim().toLowerCase();
+            if (t.includes("protocol")) {
+                th.dataset.col = "proto";
+            } else if (t.includes("predict") || t.includes("label") || t.includes("class")) {
+                th.dataset.col = "pred";
+            } else if (t.includes("conf")) {
+                th.dataset.col = "conf";
+            }
+        });
+
+        const headers = table.querySelectorAll("thead th");
+        let predIdx = -1, confIdx = -1, protoIdx = -1;
+        headers.forEach((th, i) => {
+            const t = th.innerText.toLowerCase();
+            if (t.includes("predict") || t.includes("label") || t.includes("class")) predIdx = i;
+            if (t.includes("conf")) confIdx = i;
+            if (t.includes("proto")) protoIdx = i;
+        });
+
+        table.querySelectorAll("tbody tr").forEach(row => {
+            const cells = row.querySelectorAll("td");
+            cells.forEach((td, i) => {
+                if (i === predIdx) {
+                    const val = td.innerText.trim();
+                    td.innerHTML = `<span class="pill ${getPillClass(val)}">${val}</span>`;
+                }
+                if (i === protoIdx) {
+                    const val = td.innerText.trim().toUpperCase();
+                    const cls = val === "TCP" ? "pill-tcp" : val === "UDP" ? "pill-udp" : "pill-icmp";
+                    td.innerHTML = `<span class="pill ${cls}">${val}</span>`;
+                }
+                if (i === confIdx) {
+                    const num = parseFloat(td.innerText);
+                    if (!isNaN(num)) {
+                        const pct = num > 1 ? num : num * 100;
+                        const cls = pct >= 90 ? "high" : pct >= 75 ? "mid" : "low";
+                        td.innerHTML = `<div class="conf-bar-wrap"><div class="conf-bar"><div class="conf-fill ${cls}" style="width:${pct.toFixed(0)}%"></div></div><span class="conf-text">${pct.toFixed(1)}%</span></div>`;
+                    }
+                }
+            });
+        });
+
+        updateStats();
+    }
+
+    function updateStats() {
+        const table = document.querySelector("table");
+        if (!table) return;
+        const rows = Array.from(table.querySelectorAll("tbody tr")).filter(r => r.style.display !== "none");
+        document.getElementById("s-total").textContent = rows.length;
+        const normals = rows.filter(r => r.innerText.toLowerCase().includes("normal")).length;
+        document.getElementById("s-normal").textContent = normals;
+        document.getElementById("s-threat").textContent = rows.length - normals;
+        document.getElementById("s-conf").textContent = "—";
+        document.getElementById("row-badge").textContent = rows.length + " rows";
+        document.getElementById("footer-info").textContent = "Showing " + rows.length + " rows";
+    }
+
+    function filterTable() {
+        const q = document.getElementById("search").value.toLowerCase();
+        const pred = document.getElementById("filter-pred").value.toLowerCase();
+        const table = document.querySelector("table");
+        if (!table) return;
+        const rows = table.querySelectorAll("tbody tr");
+        rows.forEach(row => {
+            const text = row.innerText.toLowerCase();
+            const matchQ = !q || text.includes(q);
+            const matchP = !pred || text.includes(pred);
+            row.style.display = matchQ && matchP ? "" : "none";
+        });
+        updateStats();
+    }
+
+    function exportCSV() {
+        const table = document.querySelector("table");
+        if (!table) return;
+        let csv = [];
+        table.querySelectorAll("tr").forEach(row => {
+            const cols = Array.from(row.querySelectorAll("th, td")).map(c => '"' + c.innerText.trim().replace(/"/g, '""') + '"');
+            csv.push(cols.join(","));
+        });
+        const blob = new Blob([csv.join("\n")], {type: "text/csv"});
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "predictions.csv";
+        a.click();
+    }
+
+    window.onload = styleTable;
+</script>
 </body>
 </html>
