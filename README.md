@@ -336,11 +336,6 @@ Contributions are welcome! To contribute:
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
----
-
-## 📄 License
-
-This project is open source and available under the MIT License.
 
 ---
 
@@ -374,6 +369,6 @@ This project is open source and available under the MIT License.
 
 ---
 
-**Made with ❤️ by [Deepa5270](https://github.com/Deepa5270)**
+
 
 Last Updated: June 20, 2026 | Deployed: Render ✅
